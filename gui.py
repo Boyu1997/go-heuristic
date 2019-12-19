@@ -33,6 +33,8 @@ class Application(tkinter.Frame):
         board_window.pack()
 
         # define function buttons
+        self.SCORE = ttk.Button(self, text="SCORE", command=self.score)
+        self.SCORE.pack(side="bottom")
         self.QUIT = ttk.Button(self, text="QUIT", command=self.master.destroy)
         self.QUIT.pack(side="bottom")
 
@@ -40,16 +42,25 @@ class Application(tkinter.Frame):
         for stone, button in zip(self.go.game_board, self.game_buttons):
             button['text'] = stone.status
 
+    def score(self):
+        score = self.go.score()
+        self.refresh_game_board()
+        print (score)
+
     def btnClick(self, stone):
         # check valid
         if stone.status == EMPTY:
             # place the stone
-            self.go.place_stone(stone.idx, WHITE)
-            self.refresh_game_board()
+            success = self.go.place_stone(stone.idx, WHITE)
+            if success:
+                self.refresh_game_board()
 
-            # place opponent's stone
-            self.go.play_one_move()
-            self.refresh_game_board()
+                # place opponent's stone
+                self.go.play_one_move()
+                self.refresh_game_board()
+            else:
+                messagebox.showinfo("Error", "Ko rule violation!")
+
         else:
             messagebox.showinfo("Error", "A stone can only be placed on an empty tile!")
 
