@@ -1,6 +1,8 @@
-from go import init_board
+from go import Go
 from gui import start_game
 
 
-game_board = init_board(5)
-start_game(game_board)
+N = 5
+
+go = Go(N)
+start_game(go)
