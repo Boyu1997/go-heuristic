@@ -52,7 +52,7 @@ class Go():
         # init for checks
         my_color = self.game_board[idx].status
         opp_color = WHITE if my_color == BLACK else BLACK
-        my_pieces = []
+        my_pieces = [idx]
         opp_pieces = []
 
         # find positions to check
@@ -74,3 +74,7 @@ class Go():
 
     def play_one_move(self):
         pass
+        # for i in range(self.N**2):
+        #     if self.game_board[i].status == EMPTY:
+        #         self.place_piece(i, BLACK)
+        #         break
