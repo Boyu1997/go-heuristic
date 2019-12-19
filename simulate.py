@@ -36,7 +36,7 @@ result_satistic = {'win': 0, 'draw':0, 'loss': 0}   # with respect to BLACK
 simulation_data = []
 
 for i in range(1000):
-    go = GoSimulate(9)
+    go = GoSimulate(12)
 
     next_move = True
     color = BLACK
@@ -48,7 +48,7 @@ for i in range(1000):
         color = next_color(color)
         game_steps.append(go.get_board_2d())
         move_count += 1
-        if move_count == 1000:
+        if move_count == 10000:
             raise RecursionError('Max simulating stepts reached')
 
     score = go.score()
