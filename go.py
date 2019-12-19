@@ -1,6 +1,6 @@
 WHITE, BLACK, EMPTY = '○', '●', ' '
 
-class GoPiece():
+class GoStone():
     def __init__(self, x, y, idx):
         self.x = x
         self.y = y
@@ -10,15 +10,15 @@ class GoPiece():
 class Go():
     def __init__(self, N):
         self.N = N
-        self.game_board = [GoPiece(i, j, i*N+j) for i in range(N) for j in range(N)]
+        self.game_board = [GoStone(i, j, i*N+j) for i in range(N) for j in range(N)]
 
-        # find neighbors for all piece
-        for piece in self.game_board:
-            possible_ns = [[piece.x+1, piece.y],
-                           [piece.x-1, piece.y],
-                           [piece.x, piece.y+1],
-                           [piece.x, piece.y-1]]
-            piece.neighbors = [n[0]*N + n[1] for n in possible_ns
+        # find neighbors for all stone
+        for stone in self.game_board:
+            possible_ns = [[stone.x+1, stone.y],
+                           [stone.x-1, stone.y],
+                           [stone.x, stone.y+1],
+                           [stone.x, stone.y-1]]
+            stone.neighbors = [n[0]*N + n[1] for n in possible_ns
                                if n[0]%N == n[0] and n[1] % N == n[1]]
 
     def find_chain_and_reach(self, start_idx):
@@ -45,36 +45,35 @@ class Go():
             for idx in chain:
                 self.game_board[idx].status = EMPTY
 
-    def place_piece(self, idx, new_status):
+    def place_stone(self, idx, new_status):
         # update color
         self.game_board[idx].status = new_status
 
         # init for checks
         my_color = self.game_board[idx].status
         opp_color = WHITE if my_color == BLACK else BLACK
-        my_pieces = [idx]
-        opp_pieces = []
+        my_stones = [idx]
+        opp_stones = []
 
         # find positions to check
         for n in self.game_board[idx].neighbors:
             if self.game_board[n].status == my_color:
-                my_pieces.append(n)
+                my_stones.append(n)
             elif self.game_board[n].status == opp_color:
-                opp_pieces.append(n)
+                opp_stones.append(n)
 
-        print (my_pieces)
-        print (opp_pieces)
+        print (my_stones)
+        print (opp_stones)
         # check if captures opponent
-        for idx in opp_pieces:
+        for idx in opp_stones:
             self.attempt_capture(idx)
 
         # check if captured by opponent
-        for idx in my_pieces:
+        for idx in my_stones:
             self.attempt_capture(idx)
 
     def play_one_move(self):
-        pass
-        # for i in range(self.N**2):
-        #     if self.game_board[i].status == EMPTY:
-        #         self.place_piece(i, BLACK)
-        #         break
+        for i in range(self.N**2):
+            if self.game_board[i].status == EMPTY:
+                self.place_stone(i, BLACK)
+                break

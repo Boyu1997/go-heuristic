@@ -23,12 +23,12 @@ class Application(tkinter.Frame):
     def createWidgets(self):
         # define game board
         board_window = tkinter.Frame(self)
-        for piece in self.go.game_board:
+        for stone in self.go.game_board:
             b = ttk.Button(board_window,
-                           text=piece.status,
+                           text=stone.status,
                            style='GameBoard.TButton')
-            b['command'] = functools.partial(self.btnClick, piece)
-            b.grid(row=piece.x,column=piece.y)
+            b['command'] = functools.partial(self.btnClick, stone)
+            b.grid(row=stone.x,column=stone.y)
             self.game_buttons.append(b)
         board_window.pack()
 
@@ -37,20 +37,21 @@ class Application(tkinter.Frame):
         self.QUIT.pack(side="bottom")
 
     def refresh_game_board(self):
-        for piece, button in zip(self.go.game_board, self.game_buttons):
-            button['text'] = piece.status
+        for stone, button in zip(self.go.game_board, self.game_buttons):
+            button['text'] = stone.status
 
-    def btnClick(self, piece):
+    def btnClick(self, stone):
         # check valid
-        if piece.status == EMPTY:
-            # place the piece
-            self.go.place_piece(piece.idx, WHITE)
+        if stone.status == EMPTY:
+            # place the stone
+            self.go.place_stone(stone.idx, WHITE)
             self.refresh_game_board()
 
-            # place opponent's piece
+            # place opponent's stone
             self.go.play_one_move()
+            self.refresh_game_board()
         else:
-            messagebox.showinfo("Error", "A piece can only be placed on an empty tile!")
+            messagebox.showinfo("Error", "A stone can only be placed on an empty tile!")
 
 
 def start_game(game_board):
