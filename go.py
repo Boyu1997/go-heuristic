@@ -28,7 +28,12 @@ class Go():
     def get_board_2d(self):
         board_2d = [[] for _ in range(self.N)]
         for i in range(self.N**2):
-            board_2d[i//self.N].append(self.game_board[i].status)
+            if self.game_board[i].status == BLACK:
+                board_2d[i//self.N].append(1)
+            elif self.game_board[i].status == WHITE:
+                board_2d[i//self.N].append(2)
+            else:
+                board_2d[i//self.N].append(0)
         return board_2d
 
     def find_chain_and_reach(self, start_idx):
