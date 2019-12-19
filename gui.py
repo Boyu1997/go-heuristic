@@ -12,6 +12,7 @@ class Application(tkinter.Frame):
         tkinter.Frame.__init__(self, master)
         self.go = go
         self.master = master
+        self.game_buttons = []
         self.pack()
         self.createWidgets()
 
@@ -26,20 +27,25 @@ class Application(tkinter.Frame):
             b = ttk.Button(board_window,
                            text=piece.status,
                            style='GameBoard.TButton')
-            b['command'] = functools.partial(self.btnClick, piece, b)
+            b['command'] = functools.partial(self.btnClick, piece)
             b.grid(row=piece.x,column=piece.y)
+            self.game_buttons.append(b)
         board_window.pack()
 
         # define function buttons
         self.QUIT = ttk.Button(self, text="QUIT", command=self.master.destroy)
         self.QUIT.pack(side="bottom")
 
-    def btnClick(self, piece, button):
+    def refresh_game_board(self):
+        for piece, button in zip(self.go.game_board, self.game_buttons):
+            button['text'] = piece.status
+
+    def btnClick(self, piece):
         # check valid
         if piece.status == EMPTY:
             # place the piece
             self.go.place_piece(piece.idx, WHITE)
-            button['text'] = WHITE
+            self.refresh_game_board()
 
             # place opponent's piece
             self.go.play_one_move()
