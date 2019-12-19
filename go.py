@@ -25,6 +25,12 @@ class Go():
                                if n[0]%N == n[0] and n[1] % N == n[1]]
 
 
+    def get_board_2d(self):
+        board_2d = [[] for _ in range(self.N)]
+        for i in range(self.N**2):
+            board_2d[i//self.N].append(self.game_board[i].status)
+        return board_2d
+
     def find_chain_and_reach(self, start_idx):
         color = self.game_board[start_idx].status
         chain = set([start_idx])
