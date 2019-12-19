@@ -3,43 +3,44 @@ from tkinter import ttk
 import functools
 
 from go import GoPiece
+from go import WHITE
+
 
 class Application(tkinter.Frame):
-    def __init__(self, master=None):
+    def __init__(self, game_board, master=None):
         tkinter.Frame.__init__(self, master)
+        self.master = master
+        self.game_board = game_board
+        # self.board_buttons = []
         self.pack()
         self.createWidgets()
 
         # setup style
         s = ttk.Style()
-        s.configure('BW.TButton', font='Times 20 bold', height=4, width=8)
+        s.configure('GameBoard.TButton', font='Times 20 bold', height=4, width=1)
 
     def createWidgets(self):
-        N = 5
 
+        # define game board
+        board_window = tkinter.Frame(self)
+        for piece in self.game_board:
+            b = ttk.Button(board_window,
+                           text=piece.status,
+                           style='GameBoard.TButton')
+            b['command'] = functools.partial(self.btnClick, piece, b)
+            b.grid(row=piece.x,column=piece.y)
+        board_window.pack()
 
-        buttons = tkinter.Frame (self)
-
-        for i in range(N):
-            for j in range(N):
-                pice = GoPiece(i, j)
-                b = ttk.Button(buttons,
-                               text=pice.status,
-                               style='BW.TButton',
-                               command=functools.partial(self.func, pice))
-                b.grid(row=i,column=j)
-
-        buttons.pack()
-
-        self.QUIT = ttk.Button(self, text="QUIT", command=root.destroy)
+        # define function buttons
+        self.QUIT = ttk.Button(self, text="QUIT", command=self.master.destroy)
         self.QUIT.pack(side="bottom")
 
-    def func(self, pice):
-        print (pice.x, pice.y)
+    def btnClick(self, piece, button):
+        piece.status = WHITE
+        button['text'] = WHITE
 
-    def say_hi(self):
-        print ("hi")
 
-root = tkinter.Tk()
-app = Application(master=root)
-app.mainloop()
+def start_game(game_board):
+    root = tkinter.Tk()
+    app = Application(game_board, master=root)
+    app.mainloop()
