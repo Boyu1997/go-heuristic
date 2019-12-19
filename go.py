@@ -1,3 +1,5 @@
+import random
+
 WHITE, BLACK, EMPTY = '○', '●', ' '
 
 class GoStone():
@@ -11,6 +13,7 @@ class Go():
     def __init__(self, N):
         self.N = N
         self.game_board = [GoStone(i, j, i*N+j) for i in range(N) for j in range(N)]
+        self.empty_tiles = set(range(N*N))
 
         # find neighbors for all stone
         for stone in self.game_board:
@@ -44,10 +47,13 @@ class Go():
         if not any(self.game_board[r].status == EMPTY for r in reach):
             for idx in chain:
                 self.game_board[idx].status = EMPTY
+                self.empty_tiles.add(idx)
 
     def place_stone(self, idx, new_status):
-        # update color
+        # place the stone
         self.game_board[idx].status = new_status
+        self.empty_tiles.remove(idx)
+        print ("empty", self.empty_tiles)
 
         # init for checks
         my_color = self.game_board[idx].status
@@ -73,7 +79,5 @@ class Go():
             self.attempt_capture(idx)
 
     def play_one_move(self):
-        for i in range(self.N**2):
-            if self.game_board[i].status == EMPTY:
-                self.place_stone(i, BLACK)
-                break
+        idx = random.sample(self.empty_tiles, 1)[0]
+        self.place_stone(idx, BLACK)
