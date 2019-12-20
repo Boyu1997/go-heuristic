@@ -56,7 +56,12 @@ class Application(tkinter.Frame):
                 self.refresh_game_board()
 
                 # place opponent's stone
-                self.go.play_one_move()
+                success = self.go.play_one_move()
+                if not success:   # no move valid move
+                    messagebox.showinfo("Info", "End of game!")
+                    score = self.go.score()
+                    print (score)
+
                 self.refresh_game_board()
             else:
                 messagebox.showinfo("Error", "Ko rule violation!")
