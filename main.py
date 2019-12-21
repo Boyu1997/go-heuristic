@@ -2,7 +2,7 @@ from copy import deepcopy
 import pandas as pd
 import numpy as np
 
-from  model import cnn_model
+from  model.model import cnn_model
 from go import Go
 from go import BLACK
 from gui import start_game
@@ -26,15 +26,10 @@ class GameGo(Go):
                     layout = deepcopy(board)
                     layout[i][j] = 1
                     possible_layouts.append({'data': layout, 'idx': i*self.N+j})
-        # print (possible_layouts)
+
         df = pd.DataFrame(possible_layouts)
-
         prediction = model.predict(np.array(df['data'].values.tolist()).reshape(-1,12,12,1))
-
-        df['score'] = prediction[:,1] - prediction[:,2] # the score for black winning the game
-
-        # selected_idx = df.iloc[df['score'].idxmax()]['idx']
-        # print (r)
+        df['score'] = prediction[:,0] - prediction[:,1] # the score for black winning the game
 
         df = df.sort_values(by=['score'], ascending=False)
         sorted_idx = list(df['idx'])
@@ -51,7 +46,7 @@ class GameGo(Go):
 N = 12   # the model is trained for 12*12 board
 
 model = cnn_model()
-model.load_weights('save/weights02.h5')
+model.load_weights('model/save/iteration-02-weights.hdf5')
 
 go = GameGo(N)
 start_game(go)
