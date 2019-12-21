@@ -138,6 +138,9 @@ class Go():
         '''
         assume all dead stones are taken
         idealy, we want a method to determine which chain of stone is dead
+
+        postive socre - BLACK wins
+        negative score - BLACK loss
         '''
 
         while len(self.empty_tiles):
