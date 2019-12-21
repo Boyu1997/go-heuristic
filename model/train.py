@@ -22,7 +22,7 @@ def train(heuristic_model_iteration=None):
 
     X = np.array(df['data'].values.tolist()).reshape(-1,12,12,1)
     y = to_categorical(df['label'], num_classes=2)
-    print (np.sum(y, axis=0))
+    print ("data count by class:", np.sum(y, axis=0))
 
     train_validate_split = 0.8
     s = int(len(df) * train_validate_split)
@@ -32,6 +32,9 @@ def train(heuristic_model_iteration=None):
     class_weight = {0: class_count[0], 1: class_count[1]}
 
     model = cnn_model()
+    if heuristic_model_iteration >= 1:   # new model trained base on last model
+        model.load_weights('save/iteration-{:02d}-weights.hdf5'.format(heuristic_model_iteration-1))
+
     mc = ModelCheckpoint(model_path,
                          save_best_only=True,
                          monitor='val_loss',
